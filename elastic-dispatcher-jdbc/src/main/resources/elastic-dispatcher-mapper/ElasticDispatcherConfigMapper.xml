@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.richterplus.elastic.dispatcher.jdbc.mapper.ElasticDispatcherConfigMapper">
+    <resultMap type="com.github.richterplus.elastic.dispatcher.jdbc.entity.ElasticDispatcherConfig" id="elasticDispatcherConfig">
+        <id column="config_id" property="configId"/>
+        <result column="config_name" property="configName"/>
+        <result column="max_value" property="maxValue"/>
+        <result column="current_value" property="currentValue"/>
+    </resultMap>
+
+    <select id="count" parameterType="com.github.mybatisq.Query" resultType="java.lang.Integer">
+        select count(*) <include refid="com.github.richterplus.elastic.dispatcher.jdbc.mapper.QMapper.countFrom"/>
+    </select>
+
+    <select id="select" parameterType="com.github.mybatisq.Query" resultMap="elasticDispatcherConfig">
+        select <if test="selectedColumns.size > 0"><foreach collection="selectedColumns" item="col" separator=",">${tableAlias}.`${col.name}`</foreach></if><if test="selectedColumns.size == 0">${tableAlias}.`config_id`,${tableAlias}.`config_name`,${tableAlias}.`max_value`,${tableAlias}.`current_value`</if> <include refid="com.github.richterplus.elastic.dispatcher.jdbc.mapper.QMapper.selectFrom"/>
+    </select>
+
+    <insert id="insert" parameterType="com.github.richterplus.elastic.dispatcher.jdbc.entity.ElasticDispatcherConfig" useGeneratedKeys="true" keyProperty="configId">
+        <trim prefix="insert `elastic_dispatcher_config` (" suffix=")" suffixOverrides=",">
+            <if test="configId != null">`config_id`,</if>
+            <if test="configName != null">`config_name`,</if>
+            <if test="maxValue != null">`max_value`,</if>
+            <if test="currentValue != null">`current_value`,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="configId != null">#{configId},</if>
+            <if test="configName != null">#{configName},</if>
+            <if test="maxValue != null">#{maxValue},</if>
+            <if test="currentValue != null">#{currentValue},</if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="configId">
+        <trim prefix="insert `elastic_dispatcher_config` (`config_name`,`max_value`,`current_value`) values ">
+            <foreach collection="list" item="item" separator=",">
+                (#{item.configName},#{item.maxValue},#{item.currentValue})
+            </foreach>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.github.richterplus.elastic.dispatcher.jdbc.entity.ElasticDispatcherConfig">
+        <trim prefix="update `elastic_dispatcher_config` set" suffix="where `config_id`=#{configId}" suffixOverrides=",">
+            <if test="configName != null">`config_name`=#{configName},</if>
+            <if test="maxValue != null">`max_value`=#{maxValue},</if>
+            <if test="currentValue != null">`current_value`=#{currentValue},</if>
+        </trim>
+    </update>
+
+    <update id="batchUpdate">
+        <foreach collection="list" item="item" separator=";">
+            <trim prefix="update `elastic_dispatcher_config` set" suffix="where `config_id`=#{item.configId}" suffixOverrides=",">
+                <if test="item.configName != null">`config_name`=#{item.configName},</if>
+                <if test="item.maxValue != null">`max_value`=#{item.maxValue},</if>
+                <if test="item.currentValue != null">`current_value`=#{item.currentValue},</if>
+            </trim>
+        </foreach>
+    </update>
+
+    <update id="batchUpdateByCase">
+        <trim prefix="update `elastic_dispatcher_config` set" suffixOverrides=",">
+            <foreach collection="entityList" item="item" open="`config_name`=case `config_id` " close=" end," separator=" ">when #{item.configId} then #{configName}</foreach>
+            <foreach collection="entityList" item="item" open="`max_value`=case `config_id` " close=" end," separator=" ">when #{item.configId} then #{maxValue}</foreach>
+            <foreach collection="entityList" item="item" open="`current_value`=case `config_id` " close=" end," separator=" ">when #{item.configId} then #{currentValue}</foreach>
+        </trim>
+        <foreach collection="list" item="item" open="where `config_id` in (" close=")" separator=",">#{item.configId}</foreach>
+    </update>
+
+    <delete id="delete">
+        delete from `elastic_dispatcher_config` where config_id=#{configId}
+    </delete>
+
+    <delete id="batchDelete">
+        <trim prefix="delete from `elastic_dispatcher_config` where `config_id` in (" suffix=")"><foreach collection="configIdList" separator="," item="item">#{item}</foreach></trim>
+    </delete>
+
+    <delete id="deleteByQuery" parameterType="com.github.mybatisq.DeleteQuery">
+        <trim prefix="delete from `elastic_dispatcher_config`"><include refid="com.github.richterplus.elastic.dispatcher.jdbc.mapper.QMapper.deleteWhere"/></trim>
+    </delete>
+</mapper>

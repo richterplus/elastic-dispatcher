@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.richterplus.elastic.dispatcher.jdbc.mapper.ElasticDispatcherJobMapper">
+    <resultMap type="com.github.richterplus.elastic.dispatcher.jdbc.entity.ElasticDispatcherJob" id="elasticDispatcherJob">
+        <id column="job_id" property="jobId"/>
+        <result column="job_uuid" property="jobUuid"/>
+        <result column="job_no" property="jobNo"/>
+        <result column="worker_id" property="workerId"/>
+        <result column="job_info" property="jobInfo"/>
+        <result column="job_state" property="jobState"/>
+        <result column="expected_start" property="expectedStart"/>
+        <result column="acceptable_start" property="acceptableStart"/>
+        <result column="expire_date" property="expireDate"/>
+        <result column="actual_start" property="actualStart"/>
+        <result column="actual_end" property="actualEnd"/>
+        <result column="max_retry" property="maxRetry"/>
+        <result column="retry_times" property="retryTimes"/>
+        <result column="fail_reason" property="failReason"/>
+        <result column="create_date" property="createDate"/>
+    </resultMap>
+
+    <select id="count" parameterType="com.github.mybatisq.Query" resultType="java.lang.Integer">
+        select count(*) <include refid="com.github.richterplus.elastic.dispatcher.jdbc.mapper.QMapper.countFrom"/>
+    </select>
+
+    <select id="select" parameterType="com.github.mybatisq.Query" resultMap="elasticDispatcherJob">
+        select <if test="selectedColumns.size > 0"><foreach collection="selectedColumns" item="col" separator=",">${tableAlias}.`${col.name}`</foreach></if><if test="selectedColumns.size == 0">${tableAlias}.`job_id`,${tableAlias}.`job_uuid`,${tableAlias}.`job_no`,${tableAlias}.`worker_id`,${tableAlias}.`job_info`,${tableAlias}.`job_state`,${tableAlias}.`expected_start`,${tableAlias}.`acceptable_start`,${tableAlias}.`expire_date`,${tableAlias}.`actual_start`,${tableAlias}.`actual_end`,${tableAlias}.`max_retry`,${tableAlias}.`retry_times`,${tableAlias}.`fail_reason`,${tableAlias}.`create_date`</if> <include refid="com.github.richterplus.elastic.dispatcher.jdbc.mapper.QMapper.selectFrom"/>
+    </select>
+
+    <insert id="insert" parameterType="com.github.richterplus.elastic.dispatcher.jdbc.entity.ElasticDispatcherJob" useGeneratedKeys="true" keyProperty="jobId">
+        <trim prefix="insert `elastic_dispatcher_job` (" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">`job_id`,</if>
+            <if test="jobUuid != null">`job_uuid`,</if>
+            <if test="jobNo != null">`job_no`,</if>
+            <if test="workerId != null">`worker_id`,</if>
+            <if test="jobInfo != null">`job_info`,</if>
+            <if test="jobState != null">`job_state`,</if>
+            <if test="expectedStart != null">`expected_start`,</if>
+            <if test="acceptableStart != null">`acceptable_start`,</if>
+            <if test="expireDate != null">`expire_date`,</if>
+            <if test="actualStart != null">`actual_start`,</if>
+            <if test="actualEnd != null">`actual_end`,</if>
+            <if test="maxRetry != null">`max_retry`,</if>
+            <if test="retryTimes != null">`retry_times`,</if>
+            <if test="failReason != null">`fail_reason`,</if>
+            <if test="createDate != null">`create_date`,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">#{jobId},</if>
+            <if test="jobUuid != null">#{jobUuid},</if>
+            <if test="jobNo != null">#{jobNo},</if>
+            <if test="workerId != null">#{workerId},</if>
+            <if test="jobInfo != null">#{jobInfo},</if>
+            <if test="jobState != null">#{jobState},</if>
+            <if test="expectedStart != null">#{expectedStart},</if>
+            <if test="acceptableStart != null">#{acceptableStart},</if>
+            <if test="expireDate != null">#{expireDate},</if>
+            <if test="actualStart != null">#{actualStart},</if>
+            <if test="actualEnd != null">#{actualEnd},</if>
+            <if test="maxRetry != null">#{maxRetry},</if>
+            <if test="retryTimes != null">#{retryTimes},</if>
+            <if test="failReason != null">#{failReason},</if>
+            <if test="createDate != null">#{createDate},</if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="jobId">
+        <trim prefix="insert `elastic_dispatcher_job` (`job_uuid`,`job_no`,`worker_id`,`job_info`,`job_state`,`expected_start`,`acceptable_start`,`expire_date`,`actual_start`,`actual_end`,`max_retry`,`retry_times`,`fail_reason`,`create_date`) values ">
+            <foreach collection="list" item="item" separator=",">
+                (#{item.jobUuid},#{item.jobNo},#{item.workerId},#{item.jobInfo},#{item.jobState},#{item.expectedStart},#{item.acceptableStart},#{item.expireDate},#{item.actualStart},#{item.actualEnd},#{item.maxRetry},#{item.retryTimes},#{item.failReason},#{item.createDate})
+            </foreach>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.github.richterplus.elastic.dispatcher.jdbc.entity.ElasticDispatcherJob">
+        <trim prefix="update `elastic_dispatcher_job` set" suffix="where `job_id`=#{jobId}" suffixOverrides=",">
+            <if test="jobUuid != null">`job_uuid`=#{jobUuid},</if>
+            <if test="jobNo != null">`job_no`=#{jobNo},</if>
+            <if test="workerId != null">`worker_id`=#{workerId},</if>
+            <if test="jobInfo != null">`job_info`=#{jobInfo},</if>
+            <if test="jobState != null">`job_state`=#{jobState},</if>
+            <if test="expectedStart != null">`expected_start`=#{expectedStart},</if>
+            <if test="acceptableStart != null">`acceptable_start`=#{acceptableStart},</if>
+            <if test="expireDate != null">`expire_date`=#{expireDate},</if>
+            <if test="actualStart != null">`actual_start`=#{actualStart},</if>
+            <if test="actualEnd != null">`actual_end`=#{actualEnd},</if>
+            <if test="maxRetry != null">`max_retry`=#{maxRetry},</if>
+            <if test="retryTimes != null">`retry_times`=#{retryTimes},</if>
+            <if test="failReason != null">`fail_reason`=#{failReason},</if>
+            <if test="createDate != null">`create_date`=#{createDate},</if>
+        </trim>
+    </update>
+
+    <update id="batchUpdate">
+        <foreach collection="list" item="item" separator=";">
+            <trim prefix="update `elastic_dispatcher_job` set" suffix="where `job_id`=#{item.jobId}" suffixOverrides=",">
+                <if test="item.jobUuid != null">`job_uuid`=#{item.jobUuid},</if>
+                <if test="item.jobNo != null">`job_no`=#{item.jobNo},</if>
+                <if test="item.workerId != null">`worker_id`=#{item.workerId},</if>
+                <if test="item.jobInfo != null">`job_info`=#{item.jobInfo},</if>
+                <if test="item.jobState != null">`job_state`=#{item.jobState},</if>
+                <if test="item.expectedStart != null">`expected_start`=#{item.expectedStart},</if>
+                <if test="item.acceptableStart != null">`acceptable_start`=#{item.acceptableStart},</if>
+                <if test="item.expireDate != null">`expire_date`=#{item.expireDate},</if>
+                <if test="item.actualStart != null">`actual_start`=#{item.actualStart},</if>
+                <if test="item.actualEnd != null">`actual_end`=#{item.actualEnd},</if>
+                <if test="item.maxRetry != null">`max_retry`=#{item.maxRetry},</if>
+                <if test="item.retryTimes != null">`retry_times`=#{item.retryTimes},</if>
+                <if test="item.failReason != null">`fail_reason`=#{item.failReason},</if>
+                <if test="item.createDate != null">`create_date`=#{item.createDate},</if>
+            </trim>
+        </foreach>
+    </update>
+
+    <update id="batchUpdateByCase">
+        <trim prefix="update `elastic_dispatcher_job` set" suffixOverrides=",">
+            <foreach collection="entityList" item="item" open="`job_uuid`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{jobUuid}</foreach>
+            <foreach collection="entityList" item="item" open="`job_no`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{jobNo}</foreach>
+            <foreach collection="entityList" item="item" open="`worker_id`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{workerId}</foreach>
+            <foreach collection="entityList" item="item" open="`job_info`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{jobInfo}</foreach>
+            <foreach collection="entityList" item="item" open="`job_state`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{jobState}</foreach>
+            <foreach collection="entityList" item="item" open="`expected_start`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{expectedStart}</foreach>
+            <foreach collection="entityList" item="item" open="`acceptable_start`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{acceptableStart}</foreach>
+            <foreach collection="entityList" item="item" open="`expire_date`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{expireDate}</foreach>
+            <foreach collection="entityList" item="item" open="`actual_start`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{actualStart}</foreach>
+            <foreach collection="entityList" item="item" open="`actual_end`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{actualEnd}</foreach>
+            <foreach collection="entityList" item="item" open="`max_retry`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{maxRetry}</foreach>
+            <foreach collection="entityList" item="item" open="`retry_times`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{retryTimes}</foreach>
+            <foreach collection="entityList" item="item" open="`fail_reason`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{failReason}</foreach>
+            <foreach collection="entityList" item="item" open="`create_date`=case `job_id` " close=" end," separator=" ">when #{item.jobId} then #{createDate}</foreach>
+        </trim>
+        <foreach collection="list" item="item" open="where `job_id` in (" close=")" separator=",">#{item.jobId}</foreach>
+    </update>
+
+    <delete id="delete">
+        delete from `elastic_dispatcher_job` where job_id=#{jobId}
+    </delete>
+
+    <delete id="batchDelete">
+        <trim prefix="delete from `elastic_dispatcher_job` where `job_id` in (" suffix=")"><foreach collection="jobIdList" separator="," item="item">#{item}</foreach></trim>
+    </delete>
+
+    <delete id="deleteByQuery" parameterType="com.github.mybatisq.DeleteQuery">
+        <trim prefix="delete from `elastic_dispatcher_job`"><include refid="com.github.richterplus.elastic.dispatcher.jdbc.mapper.QMapper.deleteWhere"/></trim>
+    </delete>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.richterplus.elastic.dispatcher.jdbc.mapper.ConfigMapper">
+
+    <update id="incrementCurrentValueByConfigName">
+        update elastic_dispatcher_config set current_value=current_value+1 where config_name=#{config_name} and current_value&lt;max_value
+    </update>
+
+    <update id="decrementCurrentValueByConfigName">
+        update elastic_dispatcher_config set current_value=current_value-1 where config_name=#{config_name} and current_value&gt;0
+    </update>
+
+</mapper>

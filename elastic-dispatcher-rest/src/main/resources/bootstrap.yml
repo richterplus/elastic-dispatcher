@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: elastic-dispatcher-rest
+  jmx:
+    enabled: false
+  devtools:
+    restart:
+      log-condition-evaluation-delta: false
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/elastic-dispatcher?useSSL=false
+    username: root
+    password: iamchenjie
+  cloud:
+    consul:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, beans, conditions, configprops, env, httptrace, loggers, metrics, mappings, scheduledtasks
+
+mybatis:
+  mapper-locations: classpath*:/elastic-dispatcher-mapper/*Mapper.xml
+
+server:
+  port: 7200
