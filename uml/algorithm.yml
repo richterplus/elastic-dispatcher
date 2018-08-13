@@ -1,0 +1,39 @@
+@startuml
+start
+repeat
+  :获取所有可以开始的任务 -> jobList;
+  :对jobList按优先级排序 -> sortedJobList;
+  repeat
+    :从sortedJobList取出一个元素 -> sortedJob;
+    :分配一个新线程并行执行;
+    fork
+      start
+      if (总调度器__当前调度数__ + 1 <= __最大调度数__) then (yes)
+        if (sortedJob对应工作者__当前调度数__ + 1 <= __最大调度数__) then (yes)
+          :设置sortedJob状态为已开始;
+          :通知客户端应用程序任务开始并执行任务;
+          if (发生异常) then (yes)
+            :sortedJob__重试次数__+1，__状态__=未开始;
+          else (no)
+            :sortedJob对应工作者__当前调度数__-1;
+            :总调度器__当前调度数__-1;
+          endif
+          end
+        else (no)
+          end
+        endif
+      else (no)
+        end
+      endif
+    end fork
+  repeat while(sortedJobList不为空)
+  :获取所有已超时的任务 -> timeoutJobs;
+  repeat
+    :从timeoutJobs取出一个元素 -> timeoutJob;
+    :timeoutJob__状态__=超时;
+    :timeoutJob对应工作者__当前调度数__-1;
+    :总调度器__当前调度数__-1;
+  repeat while(timeoutJobs不为空)
+  :等待tick毫秒;
+repeat while()
+@enduml
